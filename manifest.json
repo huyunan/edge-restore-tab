@@ -1,0 +1,25 @@
+{
+   "action": {
+      "default_title": "恢复标签页"
+   },
+   "background": {
+      "service_worker": "background.js"
+   },
+   "commands": {
+      "_execute_action": {
+         "suggested_key": {
+            "default": "Alt+R"
+         }
+      }
+   },
+   "description": "恢复标签页",
+   "icons": {
+      "16": "icon_16.png",
+      "48": "icon_48.png",
+      "128": "icon_128.png"
+   },
+   "manifest_version": 3,
+   "name": "恢复标签页",
+   "permissions": [ "sessions", "commands" ],
+   "version": "1.0"
+}
