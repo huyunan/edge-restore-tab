@@ -21,6 +21,6 @@
    "manifest_version": 3,
    "name": "恢复标签页",
    "permissions": [ "sessions", "commands" ],
-   "version": "1.0",
-   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjDc9FFdHZvN6vYdyis+xinbAX/yNEk+F8P8Yb4mI9k83TIqfAzHbaD2K3QZMTDJfMGTdy+f7P6PNJu7/vO1THRN7QM5GGx9vqh675zUR+xtpqsI93j/yZK7P9n9Ch6up6fvgEN9ASn07E6XhmgQnnyg8IDiODSOYxVxMEW59qtngBgEoMJJGDbPJHMWuOlnsP4wZ0jvbYvfo8OHDgMwxNvmxdW48MYidXeuHGhHXahD2BOKkN2nTPOIOKwDElDAp7/XQfDu6S0taIQ7sNwnwuSaVwkAoMM//ceAGQNTgngm0kgK63OSRB+b0Qvrm5tSATAVB7EmGzlb47MOs8FfxPQIDAQAB",
+   "update_url": "https://edge.microsoft.com/extensionwebstorebase/v1/crx",
+   "version": "1.0"
 }
