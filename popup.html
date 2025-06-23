@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>已关闭标签页</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div id="tabList">
+      <!-- 列表内容 -->
+    </div>
+  </div>
+
+  <div class="bottom-container">
+    <div class="bottom-controls">
+      <div class="nav-buttons">
+        <button id="prevPage" title="上一页">❮</button>
+        <button id="nextPage" title="下一页">&#10095;</button>
+      </div>
+      
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="搜索标签页...">
+        <svg class="search-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </div>
+      
+      <button id="clearAll">清除</button>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

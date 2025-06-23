@@ -1,0 +1,280 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f2f2f7;
+  width: 350px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: #000;
+}
+
+.container {
+  background-color: #fff;
+  border-radius: 10px;
+  margin: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 10px;
+}
+
+.bottom-container {
+  background-color: #fff;
+  border-radius: 10px;  /* 添加外层容器圆角 */
+  margin: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;  /* 确保内容不会超出圆角 */
+}
+
+.bottom-controls {
+  display: flex;
+  align-items: center;  /* 确保所有元素垂直居中 */
+  padding: 6px 12px;
+  background-color: #fff;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;  /* 确保按钮垂直居中 */
+}
+
+.nav-buttons button {
+  background: none;
+  border: none;
+  color: #30b282;
+  font-size: 20px;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;  /* 确保按钮内容垂直居中 */
+  height: 24px;  /* 设置与搜索框相同的高度 */
+  line-height: 24px;  /* 设置行高等于高度 */
+}
+
+.nav-buttons button:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.search-bar {
+  flex-grow: 1;
+  margin: 0 8px;
+  display: flex;
+  position: relative;  /* 为搜索图标定位 */
+}
+
+#searchInput {
+  width: 100%;
+  padding: 4px 8px;
+  padding-right: 28px;  /* 为搜索图标留出空间 */
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 12px;
+  outline: none;
+  height: 24px;
+  box-sizing: border-box;
+}
+
+.search-icon {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;  /* 使图标不影响输入框的交互 */
+  stroke: #c1c1c1;  /* 调深一点的颜色 */
+  stroke-width: 2;
+}
+
+/* 当搜索框获得焦点时，图标颜色变化 */
+#searchInput:focus + .search-icon {
+  stroke: #8e8e93;  /* 搜索框获得焦点时图标颜色变深 */
+}
+
+#clearAll {
+  padding: 4px 8px;
+  background-color: #cf1c5d;  /* 低饱和度的红色 */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  min-width: fit-content;
+  height: 24px;
+  box-sizing: border-box;
+  line-height: 16px;
+  display: flex;
+  align-items: center;
+}
+
+#clearAll:hover {
+  background-color: #a94f4a;  /* 悬停时稍微深一点 */
+}
+
+#tabList {
+  overflow-y: auto;
+}
+
+.tab-item {
+  display: flex;
+  align-items: flex-start;  /* 改为顶部对齐 */
+  padding: 8px 15px;
+  padding-right: 40px;  /* 为删除按钮留出空间 */
+  border-bottom: 1px solid #e0e0e0;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  position: relative;
+}
+
+.tab-item:last-child {
+  border-bottom: none;
+}
+
+.tab-item:hover {
+  background-color: #f5f5f5;
+}
+
+.tab-favicon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  margin-top: 3px;  /* 微调图标位置 */
+}
+
+.tab-content {
+  flex-grow: 1;
+  display: flex;
+  align-items: flex-start;  /* 改为顶部对齐 */
+  gap: 8px;
+  min-width: 0;  /* 允许子元素收缩 */
+}
+
+.tab-text {
+  flex-grow: 1;
+  min-width: 0;  /* 允许文本收缩 */
+}
+
+.tab-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;  /* 文本过长时显示省略号 */
+  margin-right: 8px;  /* 与删除按钮保持距离 */
+}
+
+.tab-time {
+  font-size: 9px;
+  color: #8e8e93;
+  margin-top: 1px;
+  line-height: 12px;
+}
+
+#pagination {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 15px;
+  background: none;
+  margin-bottom: 5px;
+}
+
+#pagination button {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 24px;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+#pagination button:hover {
+  color: #000;
+}
+
+#pagination button:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+#prevPage {
+  display: flex;  /* 确保旋转后的对齐 */
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.icon-button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.icon-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.icon-button svg {
+  fill: #007aff;
+  transition: fill 0.2s;
+}
+
+.icon-button:hover svg {
+  fill: #0056b3;
+}
+
+.icon-button:disabled svg {
+  fill: #b0b0b6;
+}
+
+.no-tabs {
+  text-align: center;
+  padding: 20px;
+  color: #8e8e93;
+  font-size: 16px;
+}
+
+#tabList::-webkit-scrollbar {
+  width: 8px;
+}
+
+#tabList::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+#tabList::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+#tabList::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.delete-button {
+  opacity: 0;
+  background: none;
+  border: none;
+  color: #c25d58;  /* 改为相同的低饱和度红色 */
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 5px;
+  transition: all 0.2s;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.delete-button:hover {
+  color: #a94f4a;  /* 悬停时使用相同的深红色 */
+}
+
+.tab-item:hover .delete-button {
+  opacity: 1;
+}

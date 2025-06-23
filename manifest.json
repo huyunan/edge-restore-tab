@@ -1,6 +1,7 @@
 {
    "action": {
-      "default_title": "恢复标签页"
+      "default_title": "恢复标签页",
+      "default_popup": "popup.html"
    },
    "background": {
       "service_worker": "background.js"
@@ -20,7 +21,7 @@
    },
    "manifest_version": 3,
    "name": "恢复标签页",
-   "permissions": [ "sessions", "commands" ],
+   "permissions": [ "tabs", "storage", "commands", "sessions" ],
    "update_url": "https://edge.microsoft.com/extensionwebstorebase/v1/crx",
    "version": "1.0"
 }
