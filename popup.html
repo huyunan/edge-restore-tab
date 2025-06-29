@@ -7,8 +7,8 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="header-container">
-    <div class="bottom-controls">
+  <div class="item-container">
+    <div class="item-controls">
       <div class="search-bar">
         <svg class="search-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
@@ -23,6 +23,16 @@
   <div class="container">
     <div id="tabList">
       <!-- 列表内容 -->
+    </div>
+  </div>
+  <div class="item-container">
+    <div class="item-controls">
+      <div role="switch" aria-checked="true" class="el-switch is-checked">
+        <input type="checkbox" id="switch" name="" class="el-switch__input">
+        <span class="el-switch__core" style="width: 40px;"></span>
+        <span class="el-switch__label el-switch__label--right is-active">
+          <span>是否设置不显示画面，直接恢复标签页</span></span>
+        </div>
     </div>
   </div>
   <script src="popup.js"></script>

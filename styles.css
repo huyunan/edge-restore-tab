@@ -7,6 +7,71 @@ body {
   color: #000;
 }
 
+.el-switch {
+      margin: 20px 20px 20px 0;
+          display: inline-flex;
+    align-items: center;
+    position: relative;
+    font-size: 14px;
+    line-height: 20px;
+    height: 20px;
+    vertical-align: middle;
+}
+..el-switch__input{
+      position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    margin: 0;
+        cursor: pointer;
+}
+.el-switch__core{
+      width: 40px;
+          border-color: #409eff;
+    background-color: #409eff;
+    margin: 0;
+    display: inline-block;
+    position: relative;
+    width: 40px;
+    height: 20px;
+    border: 1px solid #dcdfe6;
+    outline: none;
+    border-radius: 10px;
+    box-sizing: border-box;
+    background: #dcdfe6;
+    cursor: pointer;
+    transition: border-color .3s, background-color .3s;
+    vertical-align: middle;
+        font-size: 14px;
+    line-height: 20px;
+}
+.el-switch__core:after{
+      content: "";
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    border-radius: 100%;
+    transition: all .3s;
+    width: 16px;
+    height: 16px;
+    background-color: #fff;
+}
+.el-switch__label.is-active{
+      color: #409eff;
+}
+.el-switch__label--right {
+  margin-left: 10px;
+}
+.el-switch__label{
+      transition: .2s;
+    height: 20px;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    vertical-align: middle;
+    color: #303133;
+}
 .container {
   background-color: #fff;
   border-radius: 4px;
@@ -16,7 +81,7 @@ body {
   margin-bottom: 10px;
 }
 
-.header-container {
+.item-container {
   background-color: #fff;
   border-radius: 4px;  /* 添加外层容器圆角 */
   margin: 10px;
@@ -24,7 +89,7 @@ body {
   overflow: hidden;  /* 确保内容不会超出圆角 */
 }
 
-.bottom-controls {
+.item-controls {
   display: flex;
   align-items: center;  /* 确保所有元素垂直居中 */
   padding: 6px 10px;
