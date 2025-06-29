@@ -9,16 +9,16 @@ body {
 
 .container {
   background-color: #fff;
-  border-radius: 10px;
+  border-radius: 4px;
   margin: 10px;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   margin-bottom: 10px;
 }
 
-.bottom-container {
+.header-container {
   background-color: #fff;
-  border-radius: 10px;  /* 添加外层容器圆角 */
+  border-radius: 4px;  /* 添加外层容器圆角 */
   margin: 10px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   overflow: hidden;  /* 确保内容不会超出圆角 */
@@ -27,37 +27,13 @@ body {
 .bottom-controls {
   display: flex;
   align-items: center;  /* 确保所有元素垂直居中 */
-  padding: 6px 12px;
+  padding: 6px 10px;
   background-color: #fff;
-}
-
-.nav-buttons {
-  display: flex;
-  gap: 8px;
-  align-items: center;  /* 确保按钮垂直居中 */
-}
-
-.nav-buttons button {
-  background: none;
-  border: none;
-  color: #30b282;
-  font-size: 20px;
-  padding: 0;
-  cursor: pointer;
-  display: flex;
-  align-items: center;  /* 确保按钮内容垂直居中 */
-  height: 24px;  /* 设置与搜索框相同的高度 */
-  line-height: 24px;  /* 设置行高等于高度 */
-}
-
-.nav-buttons button:disabled {
-  color: #ccc;
-  cursor: not-allowed;
 }
 
 .search-bar {
   flex-grow: 1;
-  margin: 0 8px;
+  margin-right: 8px;
   display: flex;
   position: relative;  /* 为搜索图标定位 */
 }
@@ -65,18 +41,19 @@ body {
 #searchInput {
   width: 100%;
   padding: 4px 8px;
-  padding-right: 28px;  /* 为搜索图标留出空间 */
+  padding-left: 22px;
+    /* 为搜索图标留出空间 */
   border: 1px solid #e0e0e0;
   border-radius: 4px;
   font-size: 12px;
   outline: none;
-  height: 24px;
+  height: 28px;
   box-sizing: border-box;
 }
 
 .search-icon {
   position: absolute;
-  right: 8px;
+  left: 6.5px;
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;  /* 使图标不影响输入框的交互 */
@@ -112,13 +89,29 @@ body {
 
 #tabList {
   overflow-y: auto;
+  max-height: calc(45.67px * 11);
+}
+#tabList::-webkit-scrollbar {
+	display: block !important;
+	width: 8px;
+  height: 20px;
+}
+#tabList::-webkit-scrollbar-thumb {
+	border-radius: 8px;
+	background-color: #d55959;
+}
+#tabList::-webkit-scrollbar-track {
+	border-radius: 8px;
+	background-color: #e7e7e7;
+	border: 1px solid #cacaca;
 }
 
 .tab-item {
   display: flex;
   align-items: flex-start;  /* 改为顶部对齐 */
-  padding: 8px 15px;
-  padding-right: 40px;  /* 为删除按钮留出空间 */
+  padding: 8px 14px;
+  height: 29px;
+  padding-right: 35px;  /* 为删除按钮留出空间 */
   border-bottom: 1px solid #e0e0e0;
   cursor: pointer;
   transition: background-color 0.2s;
@@ -134,10 +127,10 @@ body {
 }
 
 .tab-favicon {
-  width: 14px;
-  height: 14px;
+  width: 15px;
+  height: 15px;
   flex-shrink: 0;
-  margin-top: 3px;  /* 微调图标位置 */
+  margin-top: 7px;  /* 微调图标位置 */
 }
 
 .tab-content {
@@ -157,7 +150,6 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;  /* 文本过长时显示省略号 */
-  margin-right: 8px;  /* 与删除按钮保持距离 */
 }
 
 .tab-time {
@@ -192,12 +184,6 @@ body {
 #pagination button:disabled {
   color: #ccc;
   cursor: not-allowed;
-}
-
-#prevPage {
-  display: flex;  /* 确保旋转后的对齐 */
-  align-items: center;
-  justify-content: center;
 }
 
 .icon-button {
@@ -236,23 +222,6 @@ body {
   padding: 20px;
   color: #8e8e93;
   font-size: 16px;
-}
-
-#tabList::-webkit-scrollbar {
-  width: 8px;
-}
-
-#tabList::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-#tabList::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 4px;
-}
-
-#tabList::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
 }
 
 .delete-button {

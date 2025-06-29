@@ -1,4 +1,4 @@
-const MAX_TABS = 300;  // 最多保存200个关闭的标签页
+const MAX_TABS = 300;  // 最多保存300个关闭的标签页
 
 let tabsInfo = new Map();
 let closedTabs = [];
@@ -6,7 +6,8 @@ let closedTabs = [];
 function saveCurrentTab() {
   chrome.tabs.query({}, (tabs) => {
     tabs.forEach(tab => {
-      chrome.storage.session.set({[`tab_${tab.id}`]: {
+      chrome.storage.local.set({
+        [`tab_${tab.id}`]: {
         title: tab.title,
         url: tab.url,
         favIconUrl: tab.favIconUrl
@@ -17,7 +18,8 @@ function saveCurrentTab() {
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete') {
-    chrome.storage.session.set({[`tab_${tabId}`]: {
+    chrome.storage.local.set({
+      [`tab_${tabId}`]: {
       title: tab.title,
       url: tab.url,
       favIconUrl: tab.favIconUrl
@@ -28,7 +30,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
 chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
   try {
-    const result = await chrome.storage.session.get(`tab_${tabId}`);
+    const result = await chrome.storage.local.get(`tab_${tabId}`);
     const tabInfo = result[`tab_${tabId}`];
     
     if (!tabInfo) {

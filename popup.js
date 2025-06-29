@@ -1,7 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
     let closedTabs = [];
-    let currentPage = 1;
-    const itemsPerPage = 10;
 
     function formatTimeDifference(closedAt) {
         const now = Date.now();
@@ -45,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const faviconElement = document.createElement('img');
             faviconElement.classList.add('tab-favicon');
             
+            console.log('favIconUrl', tab, chrome.runtime.getURL('default-favicon.png'))
             // 直接使用标签页保存的 favIconUrl
             faviconElement.src = tab.favIconUrl || chrome.runtime.getURL('default-favicon.png');
             
@@ -86,7 +85,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     closedTabs = closedTabs.filter(t => t.closedAt !== tab.closedAt);
                     await chrome.storage.local.set({ closedTabs });
                     tabElement.remove();
-                    updatePagination();
                 } catch (error) {
                     console.error('删除标签页时出错:', error);
                 }
@@ -106,31 +104,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function updatePagination() {
-        document.getElementById('prevPage').disabled = currentPage === 1;
-        document.getElementById('nextPage').disabled = currentPage === Math.ceil(closedTabs.length / itemsPerPage);
+    function showPage() {
+        displayTabs(closedTabs);
     }
-
-    function showPage(page) {
-        const start = (page - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-        displayTabs(closedTabs.slice(start, end));
-        updatePagination();
-    }
-
-    document.getElementById('prevPage').addEventListener('click', () => {
-        if (currentPage > 1) {
-            currentPage--;
-            showPage(currentPage);
-        }
-    });
-
-    document.getElementById('nextPage').addEventListener('click', () => {
-        if (currentPage < Math.ceil(closedTabs.length / itemsPerPage)) {
-            currentPage++;
-            showPage(currentPage);
-        }
-    });
 
     document.getElementById('searchInput').addEventListener('input', (e) => {
         const searchTerm = e.target.value.toLowerCase();
@@ -138,9 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
             (tab.title && tab.title.toLowerCase().includes(searchTerm)) ||
             (tab.url && tab.url.toLowerCase().includes(searchTerm))
         );
-        currentPage = 1;
-        displayTabs(filteredTabs.slice(0, itemsPerPage));
-        updatePagination();
+        displayTabs(filteredTabs);
     });
 
     document.getElementById('clearAll').addEventListener('click', () => {
@@ -148,8 +122,8 @@ document.addEventListener('DOMContentLoaded', function() {
         chrome.runtime.sendMessage({ action: "clearAllClosedTabs" }, (response) => {
             if (response.success) {
                 // 清空列表显示
-                document.getElementById('tabList').innerHTML = '';
-                updatePagination();  // 更新分页
+                displayTabs([]);
+                document.getElementById('searchInput').value = '';
             }
         });
     });
@@ -158,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (response && response.closedTabs) {
             closedTabs = response.closedTabs;
             console.log('Received closed tabs:', closedTabs);
-            showPage(currentPage);
+            showPage();
         } else {
             displayTabs([]);
         }
@@ -168,6 +142,5 @@ document.addEventListener('DOMContentLoaded', function() {
     chrome.storage.local.get(['closedTabs'], (result) => {
         const tabs = result.closedTabs || [];
         displayTabs(tabs);
-        updatePagination();
     });
 });
