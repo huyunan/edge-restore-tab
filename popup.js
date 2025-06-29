@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.getElementById('clearAll').addEventListener('click', () => {
-        // 直接发送清除消息，不显示确认对话框
+        // 直接发送清空消息，不显示确认对话框
         chrome.runtime.sendMessage({ action: "clearAllClosedTabs" }, (response) => {
             if (response.success) {
                 // 清空列表显示

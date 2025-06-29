@@ -23,5 +23,5 @@
    "name": "恢复标签页",
    "permissions": [ "tabs", "storage", "commands", "sessions" ],
    "update_url": "https://edge.microsoft.com/extensionwebstorebase/v1/crx",
-   "version": "1.0"
+   "version": "1.1"
 }
