@@ -1,7 +1,6 @@
 const MAX_TABS = 300 // 最多保存300个关闭的标签页
 
 let tabsInfo = new Map()
-let closedTabs = []
 let switchInput = false
 
 function saveCurrentTab() {
@@ -20,11 +19,12 @@ function saveCurrentTab() {
 
 chrome.storage.local.get(['switchInput'], (result) => {
   switchInput = !!result.switchInput
-  if (switchInput) {
-    chrome.action.setPopup({popup: ''});
-  } else {
-    chrome.action.setPopup({popup: 'popup.html'});
-  }
+  setPopup(switchInput)
+  chrome.contextMenus.create({
+    id: '弹出框',
+    title: `弹出框${switchInput ? '显示' : '隐藏'}`,
+    contexts: ['action'],
+  });
 })
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
@@ -36,7 +36,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         favIconUrl: tab.favIconUrl
       }
     })
-    console.log(`标签页更新: ${tabId}, ${tab.title}, ${tab.favIconUrl}`)
   }
 })
 
@@ -51,7 +50,6 @@ chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
     }
 
     if (isNewTabPage(tabInfo.url)) {
-      console.log(`跳过新标签页: ${tabId}`)
       return
     }
 
@@ -89,19 +87,6 @@ chrome.runtime.onStartup.addListener(() => {
   saveCurrentTab()
 })
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === 'getClosedTabs') {
-    chrome.storage.local.get('closedTabs', (data) => {
-      sendResponse({ closedTabs: data.closedTabs || [] })
-    })
-    return true // 保持消息通道开放
-  } else if (request.action === 'clearAllClosedTabs') {
-    chrome.storage.local.set({ closedTabs: [] }, () => {
-      sendResponse({ success: true })
-    })
-    return true // 保持消息通道开放
-  }
-})
 // 检查是否为新标签页
 function isNewTabPage(url, pendingUrl) {
   const newTabUrls = [
@@ -131,18 +116,37 @@ async function getCurrentTabId() {
 }
 
 chrome.action.onClicked.addListener(() => {
+  if (!switchInput) return
   reopenLastTab()
 });
+
 chrome.storage.onChanged.addListener((changes, namespace) => {
   if (changes['switchInput']) {
     switchInput = changes['switchInput'].newValue
-    if (switchInput) {
-      chrome.action.setPopup({popup: ''});
-    } else {
-      chrome.action.setPopup({popup: 'popup.html'});
-    }
+    setPopup(switchInput)
+    chrome.contextMenus.update('弹出框', {
+      title: `弹出框${switchInput ? '显示' : '隐藏'}`,
+      contexts: ['action'],
+    });
   }
 });
+
+chrome.contextMenus.onClicked.addListener(
+  () => {
+    switchInput = !switchInput
+    chrome.storage.local.set({ switchInput })
+  }
+)
+
+// popup 以及右键菜单设置
+function setPopup(switchInput) {
+  if (switchInput) {
+    chrome.action.setPopup({popup: ''});
+  } else {
+    chrome.action.setPopup({popup: 'popup.html'});
+  }
+}
+
 // 修改重新打开最后标签页的函数
 function reopenLastTab() {
   if (!switchInput) return

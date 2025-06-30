@@ -43,7 +43,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const faviconElement = document.createElement('img');
             faviconElement.classList.add('tab-favicon');
             
-            console.log('favIconUrl', tab, chrome.runtime.getURL('default-favicon.png'))
             // 直接使用标签页保存的 favIconUrl
             faviconElement.src = tab.favIconUrl || chrome.runtime.getURL('default-favicon.png');
             
@@ -80,13 +79,25 @@ document.addEventListener('DOMContentLoaded', function() {
             deleteButton.addEventListener('click', async (e) => {
                 e.stopPropagation();
                 try {
-                    const result = await chrome.storage.local.get(['closedTabs']);
-                    let closedTabs = result.closedTabs || [];
                     closedTabs = closedTabs.filter(t => t.closedAt !== tab.closedAt);
                     await chrome.storage.local.set({ closedTabs });
                     tabElement.remove();
-                    if (closedTabs.length == 0) {
-                        displayTabs([]);
+                    const searchInput = document.getElementById('searchInput');
+                    const searchTerm = searchInput.value.toLowerCase().trim();
+                    let filteredTabs = []
+                    if (searchTerm) {
+                        filteredTabs = closedTabs.filter(tab => 
+                            (tab.title && tab.title.toLowerCase().includes(searchTerm)) ||
+                            (tab.url && tab.url.toLowerCase().includes(searchTerm))
+                        );
+                    } else {
+                        filteredTabs = closedTabs
+                    }
+                    if (filteredTabs.length == 0) {
+                        const noTabsElement = document.createElement('div');
+                        noTabsElement.textContent = '没有检索的标签页记录';
+                        noTabsElement.classList.add('no-tabs');
+                        tabList.appendChild(noTabsElement);
                     }
                 } catch (error) {
                     console.error('删除标签页时出错:', error);
@@ -105,10 +116,6 @@ document.addEventListener('DOMContentLoaded', function() {
             tabElement.appendChild(deleteButton);
             tabList.appendChild(tabElement);
         });
-    }
-
-    function showPage() {
-        displayTabs(closedTabs);
     }
 
     function toggleClass(flag) {
@@ -148,28 +155,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('clearAll').addEventListener('click', () => {
         // 直接发送清空消息，不显示确认对话框
-        chrome.runtime.sendMessage({ action: "clearAllClosedTabs" }, (response) => {
-            if (response.success) {
-                // 清空列表显示
-                displayTabs([]);
-                document.getElementById('searchInput').value = '';
-            }
-        });
-    });
-
-    chrome.runtime.sendMessage({action: "getClosedTabs"}, (response) => {
-        if (response && response.closedTabs) {
-            closedTabs = response.closedTabs;
-            console.log('Received closed tabs:', closedTabs);
-            showPage();
-        } else {
+        chrome.storage.local.set({ closedTabs: [] }, () => {
+            // 清空列表显示
             displayTabs([]);
-        }
+            closedTabs = []
+            document.getElementById('searchInput').value = '';
+        })
     });
 
     // 确保在初始化时也调用 displayTabs
     chrome.storage.local.get(['closedTabs'], (result) => {
-        const tabs = result.closedTabs || [];
-        displayTabs(tabs);
+        closedTabs = result.closedTabs || [];
+        displayTabs(closedTabs);
     });
 });

@@ -72,7 +72,7 @@ body {
   height: 20px;
   display: inline-block;
   font-size: 14px;
-  margin-top: -1px;
+  margin-top: -2px;
   font-weight: 500;
   cursor: pointer;
   vertical-align: middle;
@@ -85,26 +85,27 @@ body {
   margin: 10px;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .item-container {
-  background-color: #fff;
   border-radius: 4px;  /* 添加外层容器圆角 */
   margin: 10px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   overflow: hidden;  /* 确保内容不会超出圆角 */
 }
 
 .item-controls {
   display: flex;
   align-items: center;  /* 确保所有元素垂直居中 */
-  padding: 6px 10px;
-  background-color: #fff;
+  padding-right: 20px;
+  padding-left: 15px;
 }
 
 .item-bottom {
-  justify-content: center;
+  display: flex;
+  align-items: center;
+  padding: 0px 10px 5px;
+  margin-left: 30px;
 }
 
 .search-bar {
@@ -123,7 +124,7 @@ body {
   border-radius: 4px;
   font-size: 12px;
   outline: none;
-  height: 26px;
+  height: 28px;
   box-sizing: border-box;
 }
 
