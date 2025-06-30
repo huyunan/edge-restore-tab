@@ -166,7 +166,7 @@ body {
 
 #tabList {
   overflow-y: auto;
-  max-height: calc(45.67px * 11);
+  max-height: calc(45.67px * 11 + 2px);
 }
 #tabList::-webkit-scrollbar {
 	display: block !important;
@@ -312,7 +312,7 @@ body {
   transition: all 0.2s;
   position: absolute;
   right: 10px;
-  top: 50%;
+  top: 53%;
   transform: translateY(-50%);
   z-index: 1;
 }

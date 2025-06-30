@@ -76,10 +76,20 @@ chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
 })
 
 chrome.runtime.onInstalled.addListener(async () => {
-  chrome.storage.local.set({ closedTabs: [] }, () => {
+  const sessions = await chrome.sessions.getRecentlyClosed({maxResults: 10})
+  const closeds = sessions.map(session => {
+    const closedTab = {
+      id: session.tab.sessionId,
+      url: session.tab.url,
+      title: session.tab.title,
+      favIconUrl: session.tab.favIconUrl,
+      closedAt: Number(session.lastModified + '000')
+    }
+    return closedTab
+  });
+  chrome.storage.local.set({ closedTabs: closeds }, () => {
     console.log('已清空本地存储中的 closedTabs')
   })
-
   saveCurrentTab()
 })
 
