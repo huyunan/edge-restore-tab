@@ -67,6 +67,19 @@ body {
   margin-left: 10px;
 }
 
+.el-input__clear:before {
+  content: "\2BBE";
+}
+.el-input__clear:hover {
+  color: #909399;
+}
+.el-input__clear {
+  cursor: pointer;
+  color: #C0C4CC;
+  font-size: 14px;
+  transition: color .2s cubic-bezier(.645,.045,.355,1);
+}
+
 .el-switch__label {
   transition: .2s;
   height: 20px;
