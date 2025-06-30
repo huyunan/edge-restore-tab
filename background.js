@@ -75,24 +75,62 @@ chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
   }
 })
 
-chrome.runtime.onInstalled.addListener(async () => {
+chrome.runtime.onInstalled.addListener(async (details) => {
   const sessions = await chrome.sessions.getRecentlyClosed({maxResults: 10})
-  const closeds = sessions.map(session => {
-    const closedTab = {
-      id: session.tab.sessionId,
-      url: session.tab.url,
-      title: session.tab.title,
-      favIconUrl: session.tab.favIconUrl,
-      closedAt: Number(session.lastModified + '000')
+  const closeds = []
+  sessions.forEach(session => {
+    // 有时候会返回标签组的形式
+    if(session.window?.tabs) {
+      session.window.tabs.forEach(tab => {
+        const closedTab = {
+          id: session.window.sessionId,
+          url: tab.url,
+          title: tab.title,
+          favIconUrl: tab.favIconUrl,
+          closedAt: Number(session.lastModified + '000')
+        }
+        closeds.push(closedTab)
+      })
+    } else {
+      const closedTab = {
+        id: session.tab.sessionId,
+        url: session.tab.url,
+        title: session.tab.title,
+        favIconUrl: session.tab.favIconUrl,
+        closedAt: Number(session.lastModified + '000')
+      }
+      closeds.push(closedTab)
     }
-    return closedTab
   });
   chrome.storage.local.set({ closedTabs: closeds }, () => {
     console.log('已清空本地存储中的 closedTabs')
   })
   saveCurrentTab()
+  
+      console.log('details', details)
+    if (details.reason === chrome.runtime.OnInstalledReason.INSTALL
+        || details.reason === chrome.runtime.OnInstalledReason.UPDATE
+    ) {
+    checkCommandShortcuts();
+  }
 })
+function checkCommandShortcuts() {
+  chrome.commands.getAll((commands) => {
+    let missingShortcuts = [];
 
+    for (let {name, shortcut} of commands) {
+      if (shortcut === '') {
+        missingShortcuts.push(name);
+      }
+    }
+
+    if (missingShortcuts.length > 0) {
+      console.log('missingShortcuts', missingShortcuts)
+      // Update the extension UI to inform the user that one or more
+      // commands are currently unassigned.
+    }
+  });
+}
 chrome.runtime.onStartup.addListener(() => {
   saveCurrentTab()
 })
@@ -120,7 +158,6 @@ function isNewTabPage(url, pendingUrl) {
 
 async function getCurrentTabId() {
   let queryOptions = { active: true, lastFocusedWindow: true }
-  // `tab` will either be a `tabs.Tab` instance or `undefined`.
   let [tab] = await chrome.tabs.query(queryOptions)
   return tab?.id
 }
@@ -156,6 +193,13 @@ function setPopup(switchInput) {
     chrome.action.setPopup({popup: 'popup.html'});
   }
 }
+
+// 添加快捷键监听
+chrome.commands.onCommand.addListener(function(command) {
+    if (command === "restore-tab") {
+        reopenLastTab();
+    }
+});
 
 // 修改重新打开最后标签页的函数
 function reopenLastTab() {

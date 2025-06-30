@@ -139,6 +139,11 @@ document.addEventListener('DOMContentLoaded', function() {
         displayTabs(filteredTabs);
     });
 
+    document.getElementById('clearInput').addEventListener('click', () => {
+        document.getElementById('searchInput').value = ''
+        displayTabs(closedTabs);
+    });
+
     document.getElementById('switchDiv').addEventListener('click', () => {
         toggleClass()
         const switchDiv = document.getElementById('switchDiv').classList
