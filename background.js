@@ -20,8 +20,7 @@ function saveCurrentTab() {
 chrome.storage.local.get(['switchInput'], (result) => {
   switchInput = !!result.switchInput
   setPopup(switchInput)
-  chrome.contextMenus.create({
-    id: '弹出框',
+  chrome.contextMenus.update('弹出框', {
     title: `弹出框${switchInput ? '显示' : '隐藏'}`,
     contexts: ['action'],
   });
@@ -76,6 +75,11 @@ chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
 })
 
 chrome.runtime.onInstalled.addListener(async (details) => {
+  chrome.contextMenus.create({
+    id: '弹出框',
+    title: `弹出框${switchInput ? '显示' : '隐藏'}`,
+    contexts: ['action'],
+  });
   const sessions = await chrome.sessions.getRecentlyClosed({maxResults: 10})
   const closeds = []
   sessions.forEach(session => {
