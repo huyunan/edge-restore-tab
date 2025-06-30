@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const deleteButton = document.createElement('button');
             deleteButton.classList.add('delete-button');
             deleteButton.innerHTML = '×';
-            deleteButton.title = chrome.i18n.getMessage('deleteButtonTitle');  // 添加本地化的提示文字
+            deleteButton.title = '删除';  // 添加本地化的提示文字
 
             // 添加删除功能
             deleteButton.addEventListener('click', async (e) => {
@@ -85,6 +85,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     closedTabs = closedTabs.filter(t => t.closedAt !== tab.closedAt);
                     await chrome.storage.local.set({ closedTabs });
                     tabElement.remove();
+                    if (closedTabs.length == 0) {
+                        displayTabs([]);
+                    }
                 } catch (error) {
                     console.error('删除标签页时出错:', error);
                 }
@@ -108,6 +111,18 @@ document.addEventListener('DOMContentLoaded', function() {
         displayTabs(closedTabs);
     }
 
+    function toggleClass(flag) {
+        const switchDiv = document.getElementById('switchDiv').classList
+        const switchBtn = document.getElementById('switchBtn').classList
+        if (flag === null) {
+            switchDiv.toggle('is-checked')
+            switchBtn.toggle('is-active')
+        } else {
+            switchDiv.toggle('is-checked', flag)
+            switchBtn.toggle('is-active', flag)
+        }
+    }
+
     document.getElementById('searchInput').addEventListener('input', (e) => {
         const searchTerm = e.target.value.toLowerCase();
         const filteredTabs = closedTabs.filter(tab => 
@@ -116,6 +131,20 @@ document.addEventListener('DOMContentLoaded', function() {
         );
         displayTabs(filteredTabs);
     });
+
+    document.getElementById('switchDiv').addEventListener('click', () => {
+        toggleClass()
+        const switchDiv = document.getElementById('switchDiv').classList
+        if (switchDiv.contains('is-checked')) {
+            chrome.storage.local.set({ switchInput: true })
+        } else {
+            chrome.storage.local.set({ switchInput: false })
+        }
+    });
+
+    chrome.storage.local.get(['switchInput'], (result) => {
+        toggleClass(!!result.switchInput)
+    })
 
     document.getElementById('clearAll').addEventListener('click', () => {
         // 直接发送清空消息，不显示确认对话框
