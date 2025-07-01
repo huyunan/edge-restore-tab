@@ -1,6 +1,4 @@
 const MAX_TABS = 300 // 最多保存300个关闭的标签页
-
-let tabsInfo = new Map()
 let switchInput = false
 
 function saveCurrentTab() {
@@ -20,10 +18,6 @@ function saveCurrentTab() {
 chrome.storage.local.get(['switchInput'], (result) => {
   switchInput = !!result.switchInput
   setPopup(switchInput)
-  chrome.contextMenus.update('弹出框', {
-    title: `弹出框${switchInput ? '显示' : '隐藏'}`,
-    contexts: ['action'],
-  });
 })
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
@@ -59,7 +53,8 @@ chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
       favIconUrl: tabInfo.favIconUrl,
       closedAt: Date.now()
     }
-
+    // 使用完后删除缓存
+    chrome.storage.local.remove(`tab_${tabId}`)
     chrome.storage.local.get(['closedTabs'], (result) => {
       let closedTabs = result.closedTabs || []
       closedTabs.unshift(closedTab)
@@ -74,16 +69,11 @@ chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
   }
 })
 
-chrome.runtime.onInstalled.addListener(async (details) => {
-  chrome.contextMenus.create({
-    id: '弹出框',
-    title: `弹出框${switchInput ? '显示' : '隐藏'}`,
-    contexts: ['action'],
-  });
+chrome.runtime.onInstalled.addListener(async () => {
   const sessions = await chrome.sessions.getRecentlyClosed({maxResults: 10})
   const closeds = []
   sessions.forEach(session => {
-    // 有时候会返回标签组的形式
+    // 不同窗口的最近关闭标签
     if(session.window?.tabs) {
       session.window.tabs.forEach(tab => {
         const closedTab = {
@@ -110,31 +100,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     console.log('已清空本地存储中的 closedTabs')
   })
   saveCurrentTab()
-  
-      console.log('details', details)
-    if (details.reason === chrome.runtime.OnInstalledReason.INSTALL
-        || details.reason === chrome.runtime.OnInstalledReason.UPDATE
-    ) {
-    checkCommandShortcuts();
-  }
 })
-function checkCommandShortcuts() {
-  chrome.commands.getAll((commands) => {
-    let missingShortcuts = [];
-
-    for (let {name, shortcut} of commands) {
-      if (shortcut === '') {
-        missingShortcuts.push(name);
-      }
-    }
-
-    if (missingShortcuts.length > 0) {
-      console.log('missingShortcuts', missingShortcuts)
-      // Update the extension UI to inform the user that one or more
-      // commands are currently unassigned.
-    }
-  });
-}
 chrome.runtime.onStartup.addListener(() => {
   saveCurrentTab()
 })
@@ -175,10 +141,6 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
   if (changes['switchInput']) {
     switchInput = changes['switchInput'].newValue
     setPopup(switchInput)
-    chrome.contextMenus.update('弹出框', {
-      title: `弹出框${switchInput ? '显示' : '隐藏'}`,
-      contexts: ['action'],
-    });
   }
 });
 
@@ -190,24 +152,39 @@ chrome.contextMenus.onClicked.addListener(
 )
 
 // popup 以及右键菜单设置
-function setPopup(switchInput) {
+async function setPopup(switchInput) {
   if (switchInput) {
     chrome.action.setPopup({popup: ''});
   } else {
     chrome.action.setPopup({popup: 'popup.html'});
+  }
+  try {
+    await chrome.contextMenus.update('弹出框', {
+      title: `弹出框${switchInput ? '显示' : '隐藏'}`,
+      contexts: ['action'],
+    });
+  } catch (error) {
+    if (error.toString().indexOf('弹出框') > -1) {
+      chrome.contextMenus.create({
+        id: '弹出框',
+        title: `弹出框${switchInput ? '显示' : '隐藏'}`,
+        contexts: ['action'],
+      });
+    } else {
+      console.log('error', error)
+    }
   }
 }
 
 // 添加快捷键监听
 chrome.commands.onCommand.addListener(function(command) {
     if (command === "restore-tab") {
-        reopenLastTab();
+      reopenLastTab();
     }
 });
 
 // 修改重新打开最后标签页的函数
 function reopenLastTab() {
-  if (!switchInput) return
   chrome.storage.local.get(['closedTabs'], async (result) => {
     const closedTabs = result.closedTabs || []
     if (closedTabs.length > 0) {

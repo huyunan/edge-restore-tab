@@ -79,26 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
             deleteButton.addEventListener('click', async (e) => {
                 e.stopPropagation();
                 try {
-                    closedTabs = closedTabs.filter(t => t.closedAt !== tab.closedAt);
-                    await chrome.storage.local.set({ closedTabs });
-                    tabElement.remove();
-                    const searchInput = document.getElementById('searchInput');
-                    const searchTerm = searchInput.value.toLowerCase().trim();
-                    let filteredTabs = []
-                    if (searchTerm) {
-                        filteredTabs = closedTabs.filter(tab => 
-                            (tab.title && tab.title.toLowerCase().includes(searchTerm)) ||
-                            (tab.url && tab.url.toLowerCase().includes(searchTerm))
-                        );
-                    } else {
-                        filteredTabs = closedTabs
-                    }
-                    if (filteredTabs.length == 0) {
-                        const noTabsElement = document.createElement('div');
-                        noTabsElement.textContent = '没有检索的标签页记录';
-                        noTabsElement.classList.add('no-tabs');
-                        tabList.appendChild(noTabsElement);
-                    }
+                    await deleteItem(tab, tabElement)
                 } catch (error) {
                     console.error('删除标签页时出错:', error);
                 }
@@ -107,7 +88,13 @@ document.addEventListener('DOMContentLoaded', function() {
             // 添加点击事件（打开标签页）
             tabElement.addEventListener('click', () => {
                 if (tab.url) {
-                    chrome.tabs.create({ url: tab.url });
+                    chrome.tabs.create({ url: tab.url }, async () => {
+                        try {
+                            await deleteItem(tab, tabElement)
+                        } catch (error) {
+                            console.error('删除标签页时出错:', error);
+                        }
+                    })
                 }
             });
 
@@ -116,6 +103,29 @@ document.addEventListener('DOMContentLoaded', function() {
             tabElement.appendChild(deleteButton);
             tabList.appendChild(tabElement);
         });
+    }
+
+    async function deleteItem(tab, tabElement) {
+        closedTabs = closedTabs.filter(t => t.id !== tab.id);
+        await chrome.storage.local.set({ closedTabs });
+        tabElement.remove();
+        const searchInput = document.getElementById('searchInput');
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        let filteredTabs = []
+        if (searchTerm) {
+            filteredTabs = closedTabs.filter(tab => 
+                (tab.title && tab.title.toLowerCase().includes(searchTerm)) ||
+                (tab.url && tab.url.toLowerCase().includes(searchTerm))
+            );
+        } else {
+            filteredTabs = closedTabs
+        }
+        if (filteredTabs.length == 0) {
+            const noTabsElement = document.createElement('div');
+            noTabsElement.textContent = '没有检索的标签页记录';
+            noTabsElement.classList.add('no-tabs');
+            tabList.appendChild(noTabsElement);
+        }
     }
 
     function toggleClass(flag) {
@@ -139,6 +149,12 @@ document.addEventListener('DOMContentLoaded', function() {
         displayTabs(filteredTabs);
     });
 
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            document.getElementById('searchInput').value = ''
+            displayTabs(closedTabs);
+        }
+    });
     document.getElementById('clearInput').addEventListener('click', () => {
         document.getElementById('searchInput').value = ''
         displayTabs(closedTabs);
