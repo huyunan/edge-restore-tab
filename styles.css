@@ -68,24 +68,6 @@ body {
   margin-left: 10px;
 }
 
-.el-input__clear:before {
-  content: "\2BBE";
-}
-
-.el-input__clear {
-  cursor: pointer;
-  color: #C0C4CC;
-  font-weight: bold;
-  font-size: 14px;
-  transition: color .2s cubic-bezier(.645,.045,.355,1);
-  position: absolute;
-  right: 0;
-  top: 52%;
-  transform: translateY(-50%);
-  height: 97%;
-  padding: 5px 8px 0px;
-}
-
 .el-switch__label {
   transition: .2s;
   height: 20px;
@@ -136,7 +118,7 @@ body {
 
 #searchInput {
   width: 100%;
-  padding: 4px 28px 4px 22px;
+  padding: 4px 28px 4px 10px;
     /* 为搜索图标留出空间 */
   border: 1px solid #e0e0e0;
   border-radius: 4px;
@@ -146,19 +128,34 @@ body {
   box-sizing: border-box;
 }
 
-.search-icon {
-  position: absolute;
-  left: 6.5px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;  /* 使图标不影响输入框的交互 */
-  stroke: #c1c1c1;  /* 调深一点的颜色 */
-  stroke-width: 2;
-}
-
 /* 当搜索框获得焦点时，图标颜色变化 */
 #searchInput:focus + .search-icon {
   stroke: #8e8e93;  /* 搜索框获得焦点时图标颜色变深 */
+}
+
+.el-input__clear:before {
+  content: "\2BBE";
+}
+
+.search-bar:has(#searchInput:focus), .search-bar:hover {
+  .el-input__clear {
+    opacity: 1;
+  }
+}
+
+.el-input__clear {
+  cursor: pointer;
+  color: #cb5656;
+  font-weight: bold;
+  font-size: 14px;
+  transition: color .2s cubic-bezier(.645,.045,.355,1);
+  position: absolute;
+  right: 0;
+  top: 52%;
+  opacity: 0;
+  transform: translateY(-50%);
+  height: 97%;
+  padding: 5px 8px 0px;
 }
 
 #clearAll {
