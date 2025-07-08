@@ -1,15 +1,17 @@
 {
    "action": {
-      "default_title": "恢复标签页"
+      "default_title": "恢复标签页",
+      "default_popup": "popup.html"
    },
    "background": {
       "service_worker": "background.js"
    },
    "commands": {
-      "_execute_action": {
+      "restore-tab": {
          "suggested_key": {
-            "default": "Alt+R"
-         }
+            "default": "Alt+1"
+         },
+         "description": "恢复关闭标签页"
       }
    },
    "description": "恢复标签页",
@@ -20,7 +22,7 @@
    },
    "manifest_version": 3,
    "name": "恢复标签页",
-   "permissions": [ "sessions", "commands" ],
+   "permissions": [ "tabs", "scripting", "activeTab", "commands", "contextMenus", "storage", "sessions" ],
    "update_url": "https://edge.microsoft.com/extensionwebstorebase/v1/crx",
-   "version": "1.0"
+   "version": "1.2"
 }

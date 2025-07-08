@@ -1,0 +1,341 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f2f2f7;
+  width: 350px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: #000;
+}
+.el-switch {
+  margin: 4px 0;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  font-size: 14px;
+  line-height: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+
+.el-switch.is-checked .el-switch__core {
+  border-color: #409eff;
+  background-color: #409eff;
+}
+
+.el-switch__core {
+  width: 40px;
+  border-color: #409eff;
+  background-color: #409eff;
+  margin: 0;
+  display: inline-block;
+  position: relative;
+  width: 40px;
+  height: 20px;
+  border: 1px solid #dcdfe6;
+  outline: none;
+  border-radius: 10px;
+  box-sizing: border-box;
+  background: #dcdfe6;
+  cursor: pointer;
+  transition: border-color .3s, background-color .3s;
+  vertical-align: middle;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.el-switch__core:after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  border-radius: 100%;
+  transition: all .3s;
+  width: 16px;
+  height: 16px;
+  background-color: #fff;
+}
+
+.el-switch.is-checked .el-switch__core:after {
+  left: 100%;
+  margin-left: -17px;
+}
+
+.el-switch__label.is-active {
+  color: #409eff;
+}
+
+.el-switch__label--right {
+  margin-left: 10px;
+}
+
+.el-switch__label {
+  transition: .2s;
+  height: 20px;
+  display: inline-block;
+  font-size: 14px;
+  margin-top: -2px;
+  font-weight: 500;
+  cursor: pointer;
+  vertical-align: middle;
+  color: #8e8e93;
+}
+
+.container {
+  background-color: #fff;
+  border-radius: 4px;
+  margin: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 5px;
+}
+
+.item-container {
+  border-radius: 4px;  /* 添加外层容器圆角 */
+  margin: 10px;
+  overflow: hidden;  /* 确保内容不会超出圆角 */
+}
+
+.item-controls {
+  display: flex;
+  align-items: center;  /* 确保所有元素垂直居中 */
+  padding-right: 15px;
+  padding-left: 10px;
+}
+
+.item-bottom {
+  display: flex;
+  align-items: center;
+  padding: 0px 10px 5px;
+  margin-left: 30px;
+}
+
+.search-bar {
+  flex-grow: 1;
+  margin-right: 8px;
+  display: flex;
+  position: relative;  /* 为搜索图标定位 */
+}
+
+#searchInput {
+  width: 100%;
+  padding: 4px 28px 4px 10px;
+    /* 为搜索图标留出空间 */
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 12px;
+  outline: none;
+  height: 28px;
+  box-sizing: border-box;
+}
+
+/* 当搜索框获得焦点时，图标颜色变化 */
+#searchInput:focus + .search-icon {
+  stroke: #8e8e93;  /* 搜索框获得焦点时图标颜色变深 */
+}
+
+.el-input__clear:before {
+  content: "\2BBE";
+}
+
+.search-bar:has(#searchInput:focus), .search-bar:hover {
+  .el-input__clear {
+    opacity: 1;
+  }
+}
+
+.el-input__clear {
+  cursor: pointer;
+  color: #cb5656;
+  font-weight: bold;
+  font-size: 14px;
+  transition: color .2s cubic-bezier(.645,.045,.355,1);
+  position: absolute;
+  right: 0;
+  top: 52%;
+  opacity: 0;
+  transform: translateY(-50%);
+  height: 97%;
+  padding: 5px 8px 0px;
+}
+
+#clearAll {
+  padding: 4px 8px;
+  background-color: #cf1c5d;  /* 低饱和度的红色 */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  min-width: fit-content;
+  height: 24px;
+  box-sizing: border-box;
+  line-height: 16px;
+  display: flex;
+  align-items: center;
+}
+
+#clearAll:hover {
+  background-color: #a94f4a;  /* 悬停时稍微深一点 */
+}
+
+#tabList {
+  overflow-y: auto;
+  max-height: calc(45.67px * 11 + 2px);
+}
+#tabList::-webkit-scrollbar {
+	display: block !important;
+	width: 8px;
+  height: 20px;
+}
+#tabList::-webkit-scrollbar-thumb {
+	border-radius: 8px;
+	background-color: #d55959;
+}
+#tabList::-webkit-scrollbar-track {
+	border-radius: 8px;
+	background-color: #e7e7e7;
+	border: 1px solid #cacaca;
+}
+
+.tab-item {
+  display: flex;
+  align-items: flex-start;  /* 改为顶部对齐 */
+  padding: 8px 14px;
+  height: 29px;
+  padding-right: 35px;  /* 为删除按钮留出空间 */
+  border-bottom: 1px solid #e0e0e0;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  position: relative;
+}
+
+.tab-item:last-child {
+  border-bottom: none;
+}
+
+.tab-item:hover {
+  background-color: #f5f5f5;
+}
+
+.tab-favicon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  margin-top: 7px;  /* 微调图标位置 */
+}
+
+.tab-content {
+  flex-grow: 1;
+  display: flex;
+  align-items: flex-start;  /* 改为顶部对齐 */
+  gap: 8px;
+  min-width: 0;  /* 允许子元素收缩 */
+}
+
+.tab-text {
+  flex-grow: 1;
+  min-width: 0;  /* 允许文本收缩 */
+}
+
+.tab-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;  /* 文本过长时显示省略号 */
+}
+
+.tab-time {
+  font-size: 9px;
+  color: #8e8e93;
+  margin-top: 1px;
+  line-height: 12px;
+}
+
+#pagination {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 15px;
+  background: none;
+  margin-bottom: 5px;
+}
+
+#pagination button {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 24px;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+#pagination button:hover {
+  color: #000;
+}
+
+#pagination button:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.icon-button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.icon-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.icon-button svg {
+  fill: #007aff;
+  transition: fill 0.2s;
+}
+
+.icon-button:hover svg {
+  fill: #0056b3;
+}
+
+.icon-button:disabled svg {
+  fill: #b0b0b6;
+}
+
+.no-tabs {
+  text-align: center;
+  padding: 20px;
+  color: #8e8e93;
+  font-size: 16px;
+}
+
+.delete-button {
+  opacity: 0;
+  background: none;
+  border: none;
+  color: #c25d58;  /* 改为相同的低饱和度红色 */
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 5px;
+  transition: all 0.2s;
+  position: absolute;
+  right: 10px;
+  top: 53%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.delete-button:hover {
+  color: #a94f4a;  /* 悬停时使用相同的深红色 */
+}
+
+.tab-item:hover .delete-button {
+  opacity: 1;
+}
