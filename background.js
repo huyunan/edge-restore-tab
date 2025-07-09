@@ -145,7 +145,8 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 });
 
 chrome.contextMenus.onClicked.addListener(
-  () => {
+  (info) => {
+    if (info.menuItemId != '弹出框') return
     switchInput = !switchInput
     chrome.storage.local.set({ switchInput })
   }
