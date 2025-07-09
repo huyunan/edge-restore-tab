@@ -7,6 +7,11 @@
       "service_worker": "background.js"
    },
    "commands": {
+      "_execute_action": {
+         "suggested_key": {
+            "default": "Alt+R"
+         }
+      },
       "restore-tab": {
          "suggested_key": {
             "default": "Alt+1"
