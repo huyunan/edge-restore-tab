@@ -74,8 +74,8 @@ chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
   }
 })
 
-chrome.windows.onRemoved.addListener(async () => {
-  // 使用完后删除缓存
+async function exitWindow() {
+  if (tabIds && tabIds.length == 0) return
   const closedAllTabs = []
   for (let tabId of tabIds) {
     const closedTab = await saveClosedTabs(tabId)
@@ -90,7 +90,16 @@ chrome.windows.onRemoved.addListener(async () => {
     }
     chrome.storage.local.set({ closedTabs })
   })
+  // 使用完后删除缓存
   this.clearAllTabIds()
+}
+
+chrome.windows.onCreated.addListener(() => {
+  exitWindow()
+})
+
+chrome.windows.onRemoved.addListener(() => {
+  exitWindow()
 })
 
 chrome.runtime.onInstalled.addListener(async () => {
