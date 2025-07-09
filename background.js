@@ -133,6 +133,7 @@ chrome.runtime.onInstalled.addListener(async () => {
       closeds.push(closedTab)
     }
   });
+  await clearAllTabIds()
   await chrome.storage.local.set({ closedTabs: closeds })
   await exitWindow()
   saveCurrentTab()

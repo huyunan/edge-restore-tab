@@ -8,7 +8,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const now = Date.now();
         const diffInSeconds = Math.floor((now - closedAt) / 1000);
 
-        if (diffInSeconds < 60) {
+        if (closedAt === 0) {
+            return '异常关闭';
+        } else if (diffInSeconds < 60) {
             return '刚刚关闭';
         } else if (diffInSeconds < 3600) {
             const minutes = Math.floor(diffInSeconds / 60);
