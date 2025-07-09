@@ -1,4 +1,4 @@
-const MAX_TABS = 300 // 最多保存300个关闭的标签页
+const MAX_TABS = 500 // 最多保存500个关闭的标签页
 let switchInput = false
 
 function saveCurrentTab() {
@@ -70,7 +70,7 @@ chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
 })
 
 chrome.runtime.onInstalled.addListener(async () => {
-  const sessions = await chrome.sessions.getRecentlyClosed({maxResults: 10})
+  const sessions = await chrome.sessions.getRecentlyClosed({maxResults: 25})
   const closeds = []
   sessions.forEach(session => {
     // 不同窗口的最近关闭标签

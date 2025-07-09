@@ -125,6 +125,7 @@ body {
   font-size: 12px;
   outline: none;
   height: 28px;
+  caret-color: #d55959;
   box-sizing: border-box;
 }
 

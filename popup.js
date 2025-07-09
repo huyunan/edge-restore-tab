@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     let closedTabs = [];
+    let visibleTabs = [];
+    const MAX_RESULT = 25;
+    let page = 1;
 
     function formatTimeDifference(closedAt) {
         const now = Date.now();
@@ -20,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function displayTabs(tabs) {
+        visibleTabs = tabs
         const tabList = document.getElementById('tabList');
         tabList.innerHTML = '';
         
@@ -31,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        tabs.forEach(tab => {
+        tabs.slice(0, page * MAX_RESULT).forEach((tab, index) => {
             const tabElement = document.createElement('div');
             tabElement.classList.add('tab-item');
 
@@ -139,6 +143,25 @@ document.addEventListener('DOMContentLoaded', function() {
             switchBtn.toggle('is-active', flag)
         }
     }
+    
+    document.getElementById('tabList').addEventListener('scroll', () => {
+        const maxPage = Math.ceil(visibleTabs.length / MAX_RESULT)
+        if (visibleTabs.length <= 25 || page >= maxPage) return
+        console.log('asdfasdfsadfasdfasd')
+        const tablistBottom = document.getElementById('tabList').getBoundingClientRect().bottom
+        // 获取目标元素相对于视口的位置
+        const target = document.getElementsByClassName('tab-item')[page * MAX_RESULT - 1]
+        if (!target) {
+            console.log('target is not found')
+            return
+        }
+        const targetBottom = target.getBoundingClientRect().bottom
+        // 判断元素是否到达指定位置（例如，底部）
+        if (targetBottom - tablistBottom <= 5) {
+            page++
+        }
+        displayTabs(visibleTabs);
+    }, { passive: true });
 
     document.getElementById('searchInput').addEventListener('input', (e) => {
         const searchTerm = e.target.value.toLowerCase();
@@ -147,17 +170,20 @@ document.addEventListener('DOMContentLoaded', function() {
             (tab.url && tab.url.toLowerCase().includes(searchTerm))
         );
         displayTabs(filteredTabs);
+        document.getElementById('tabList').scrollTop = 0
     });
 
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Enter') {
             document.getElementById('searchInput').value = ''
             displayTabs(closedTabs);
+            document.getElementById('tabList').scrollTop = 0
         }
     });
     document.getElementById('clearInput').addEventListener('click', () => {
         document.getElementById('searchInput').value = ''
         displayTabs(closedTabs);
+        document.getElementById('tabList').scrollTop = 0
     });
 
     document.getElementById('switchDiv').addEventListener('click', () => {
@@ -181,6 +207,8 @@ document.addEventListener('DOMContentLoaded', function() {
             displayTabs([]);
             closedTabs = []
             document.getElementById('searchInput').value = '';
+            page = 1;
+            document.getElementById('tabList').scrollTop = 0;
         })
     });
 
