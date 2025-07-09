@@ -210,6 +210,8 @@ document.addEventListener('DOMContentLoaded', function() {
             page = 1;
             document.getElementById('tabList').scrollTop = 0;
         })
+        // 直接发送清除消息，不显示确认对话框
+        chrome.runtime.sendMessage({ action: "clearAllClosedTabs" });
     });
 
     // 确保在初始化时也调用 displayTabs
