@@ -3,7 +3,7 @@ let switchInput = false
 let tabIds = new Set()
 
 function saveCurrentTab() {
-  chrome.tabs.query({}, (tabs) => {
+  chrome.tabs.query({}, async (tabs) => {
     tabs.forEach((tab) => {
       tabIds.add(tab.id)
       chrome.storage.local.set({
@@ -14,6 +14,7 @@ function saveCurrentTab() {
         }
       })
     })
+    await chrome.storage.local.set({ tabIds: Array.from(tabIds) })
   })
 }
 
@@ -22,9 +23,10 @@ chrome.storage.local.get(['switchInput'], (result) => {
   setPopup(switchInput)
 })
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete') {
     tabIds.add(tabId)
+    await chrome.storage.local.set({ tabIds: Array.from(tabIds) })
     chrome.storage.local.set({
       [`tab_${tabId}`]: {
         title: tab.title,
@@ -75,23 +77,25 @@ chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
 })
 
 async function exitWindow() {
-  if (tabIds && tabIds.length == 0) return
+  const storage = await chrome.storage.local.get(['tabIds'])
+  if (!storage || !storage.tabIds || storage.tabIds.length == 0) return
   const closedAllTabs = []
-  for (let tabId of tabIds) {
+  for (let tabId of storage.tabIds) {
     const closedTab = await saveClosedTabs(tabId)
     if (closedTab) closedAllTabs.push(closedTab)
   }
-  chrome.storage.local.get(['closedTabs'], (result) => {
+  const result = await chrome.storage.local.get(['closedTabs'])
+  if (result) {
     let closedTabs = result.closedTabs || []
     closedTabs = closedTabs.concat(closedAllTabs)
     // 限制存储数量
     if (closedTabs.length > MAX_TABS) {
       closedTabs = closedTabs.slice(0, MAX_TABS)
     }
-    chrome.storage.local.set({ closedTabs })
-  })
+    await chrome.storage.local.set({ closedTabs })
+  }
   // 使用完后删除缓存
-  this.clearAllTabIds()
+  clearAllTabIds()
 }
 
 chrome.windows.onCreated.addListener(() => {
@@ -110,7 +114,7 @@ chrome.runtime.onInstalled.addListener(async () => {
     if(session.window?.tabs) {
       session.window.tabs.forEach(tab => {
         const closedTab = {
-          id: session.window.sessionId,
+          id: tab.sessionId,
           url: tab.url,
           title: tab.title,
           favIconUrl: tab.favIconUrl,
@@ -129,12 +133,13 @@ chrome.runtime.onInstalled.addListener(async () => {
       closeds.push(closedTab)
     }
   });
-  chrome.storage.local.set({ closedTabs: closeds }, () => {
-    console.log('已清空本地存储中的 closedTabs')
-  })
+  await chrome.storage.local.set({ closedTabs: closeds })
+  await exitWindow()
   saveCurrentTab()
 })
-chrome.runtime.onStartup.addListener(() => {
+
+chrome.runtime.onStartup.addListener(async () => {
+  await exitWindow()
   saveCurrentTab()
 })
 
@@ -211,16 +216,19 @@ async function setPopup(switchInput) {
 }
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "clearAllClosedTabs") {
-    this.clearAllTabIds()
+    clearAllTabIds()
     return true;  // 保持消息通道开放
   }
 });
 
-function clearAllTabIds() {
-  tabIds.forEach(tabId => {
+async function clearAllTabIds() {
+  tabIds.clear()
+  const storage = await chrome.storage.local.get(['tabIds'])
+  if (!storage || !storage.tabIds || storage.tabIds.length == 0) return
+  storage.tabIds.forEach(tabId => {
     chrome.storage.local.remove(`tab_${tabId}`)
   })
-  tabIds.clear()
+  await chrome.storage.local.set({ tabIds: [] })
 }
 
 // 添加快捷键监听
