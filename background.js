@@ -107,12 +107,15 @@ chrome.windows.onRemoved.addListener(() => {
 })
 
 chrome.runtime.onInstalled.addListener(async () => {
-  const sessions = await chrome.sessions.getRecentlyClosed({maxResults: 25})
+  const maxResults = 25
+  const sessions = await chrome.sessions.getRecentlyClosed({ maxResults: maxResults })
   const closeds = []
+  let count = 0
   sessions.forEach(session => {
     // 不同窗口的最近关闭标签
     if(session.window?.tabs) {
       session.window.tabs.forEach(tab => {
+        count++
         const closedTab = {
           id: tab.sessionId,
           url: tab.url,
@@ -120,9 +123,12 @@ chrome.runtime.onInstalled.addListener(async () => {
           favIconUrl: tab.favIconUrl,
           closedAt: Number(session.lastModified + '000')
         }
-        closeds.push(closedTab)
+        if (count <= maxResults && !closedTab.url.startsWith('edge://') && !closedTab.url.startsWith('chrome://')) {
+          closeds.push(closedTab)
+        }
       })
     } else {
+      count++
       const closedTab = {
         id: session.tab.sessionId,
         url: session.tab.url,
@@ -130,7 +136,9 @@ chrome.runtime.onInstalled.addListener(async () => {
         favIconUrl: session.tab.favIconUrl,
         closedAt: Number(session.lastModified + '000')
       }
-      closeds.push(closedTab)
+      if (count <= maxResults && !closedTab.url.startsWith('edge://') && !closedTab.url.startsWith('chrome://')) {
+        closeds.push(closedTab)
+      }
     }
   });
   await clearAllTabIds()
