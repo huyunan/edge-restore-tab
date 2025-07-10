@@ -50,6 +50,8 @@ async function saveClosedTabs(tabId) {
     return
   }
 
+  tabInfo.favIconUrl = setFavIconUrl(tabInfo.favIconUrl, tabInfo.url)
+
   const closedTab = {
     id: tabId,
     url: tabInfo.url,
@@ -58,6 +60,15 @@ async function saveClosedTabs(tabId) {
     closedAt: Date.now()
   }
   return closedTab
+}
+
+function setFavIconUrl(favIconUrl, url) {
+  if (url && (url.startsWith("edge://settings") || url.startsWith("chrome://settings"))) {
+    return "icon/edge/settings.png"
+  } else if (url && (url.startsWith("edge://extensions") || url.startsWith("chrome://extensions"))) {
+    return "icon/edge/extensions.png"
+  }
+  return favIconUrl
 }
 
 chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
