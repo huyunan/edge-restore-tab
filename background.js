@@ -23,10 +23,11 @@ chrome.storage.local.get(['switchInput'], (result) => {
   setPopup(switchInput)
 })
 
+
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'complete') {
+  // 如果有这两个值就更新，不用等到 status === 'complete' 防止提前关闭不能保存数据
+  if (tab.url && tab.favIconUrl) {
     tabIds.add(tabId)
-    await chrome.storage.local.set({ tabIds: Array.from(tabIds) })
     chrome.storage.local.set({
       [`tab_${tabId}`]: {
         title: tab.title,
