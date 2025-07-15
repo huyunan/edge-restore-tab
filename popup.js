@@ -92,9 +92,16 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             // 添加点击事件（打开标签页）
-            tabElement.addEventListener('click', () => {
+            tabElement.addEventListener('click', async () => {
                 if (tab.url) {
-                    chrome.tabs.create({ url: tab.url }, async () => {
+                    const params = {
+                        url: tab.url
+                    }
+                    const current = await chrome.tabs.query({ active: true, currentWindow: true});
+                    if (current.length > 0) {
+                        params.index = current[0].index + 1
+                    }
+                    chrome.tabs.create(params, async () => {
                         try {
                             await deleteItem(tab, tabElement)
                         } catch (error) {
