@@ -7,17 +7,6 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="item-container">
-    <div class="item-controls">
-      <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="输入搜索关键词...">
-        <span class="el-input__clear" id="clearInput" class="el-input__clear"></span>
-      </span>
-      </div>
-      
-      <button id="clearAll">清空</button>
-    </div>
-  </div>
   <div class="container">
     <div id="tabList">
       <!-- 列表内容 -->
@@ -28,8 +17,19 @@
       <div id="switchDiv" class="el-switch">
         <span class="el-switch__core" style="width: 40px;"></span>
         <span class="el-switch__label el-switch__label--right" id="switchBtn">
-          <span>点击图标恢复最近标签页</span></span>
+          <span>点击插件直接恢复最近标签页</span></span>
         </div>
+    </div>
+  </div>
+  <div class="item-container">
+    <div class="item-controls">
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="输入搜索关键词...">
+        <span class="el-input__clear" id="clearInput" class="el-input__clear"></span>
+      </span>
+      </div>
+      
+      <button id="clearAll">清空</button>
     </div>
   </div>
   <script src="popup.js"></script>

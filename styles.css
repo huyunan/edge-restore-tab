@@ -92,6 +92,7 @@ body {
 .item-container {
   border-radius: 4px;  /* 添加外层容器圆角 */
   margin: 10px;
+  margin-top: 0;
   overflow: hidden;  /* 确保内容不会超出圆角 */
 }
 
@@ -182,7 +183,7 @@ body {
 
 #tabList {
   overflow-y: auto;
-  max-height: calc(45.67px * 11 + 2px);
+  height: calc(45px * 11);
 }
 #tabList::-webkit-scrollbar {
 	display: block !important;
@@ -201,18 +202,15 @@ body {
 
 .tab-item {
   display: flex;
-  align-items: flex-start;  /* 改为顶部对齐 */
+  align-items: center;
+  box-sizing: border-box;
   padding: 8px 14px;
-  height: 29px;
+  height: 45px;
   padding-right: 35px;  /* 为删除按钮留出空间 */
   border-bottom: 1px solid #e0e0e0;
   cursor: pointer;
   transition: background-color 0.2s;
   position: relative;
-}
-
-.tab-item:last-child {
-  border-bottom: none;
 }
 
 .tab-item:hover {
@@ -311,7 +309,9 @@ body {
 }
 
 .no-tabs {
-  text-align: center;
+  position: absolute;
+  left: 20%;
+  top: 36%;
   padding: 20px;
   color: #8e8e93;
   font-size: 16px;
