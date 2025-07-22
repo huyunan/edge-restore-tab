@@ -26,7 +26,7 @@ chrome.storage.sync.get(['switchInput'], (result) => {
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   // 如果有这两个值就更新，不用等到 status === 'complete' 防止提前关闭不能保存数据
-  if (tab.url && tab.favIconUrl) {
+  if (tab.url || tab.favIconUrl) {
     tabIds.add(tabId)
     chrome.storage.sync.set({
       [`tab_${tabId}`]: {
