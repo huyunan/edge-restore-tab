@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
         tabs.slice(0, page * MAX_RESULT).forEach((tab, index) => {
             const tabElement = document.createElement('div');
             tabElement.classList.add('tab-item');
+            tabElement.title = tab.title || '无标题';
 
             // 创建左侧内容区域
             const contentDiv = document.createElement('div');

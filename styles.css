@@ -208,12 +208,17 @@ body {
 }
 
 .tab-item:hover {
-  background-color: #f5f5f5;
+  background-color: #e8f0fe;
+  color: #158ed6;
+  .tab-time {
+    color: #57849f;
+  }
 }
 
 .tab-favicon {
   width: 15px;
   height: 15px;
+  opacity: 0.9;
   flex-shrink: 0;
   margin-top: 7px;  /* 微调图标位置 */
 }
