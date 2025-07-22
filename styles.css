@@ -136,13 +136,7 @@ body {
 }
 
 .el-input__clear:before {
-  content: "\2BBE";
-}
-
-.search-bar:has(#searchInput:focus), .search-bar:hover {
-  .el-input__clear {
-    opacity: 1;
-  }
+  content: "\273C";
 }
 
 .el-input__clear {

@@ -173,6 +173,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('searchInput').addEventListener('input', (e) => {
         const searchTerm = e.target.value.toLowerCase();
+        let opacityStyle = 0
+        if (searchTerm) {
+            opacityStyle = 1
+        }
+        document.getElementsByClassName('el-input__clear')[0].style.opacity = opacityStyle
         const filteredTabs = closedTabs.filter(tab => 
             (tab.title && tab.title.toLowerCase().includes(searchTerm)) ||
             (tab.url && tab.url.toLowerCase().includes(searchTerm))
@@ -190,6 +195,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     document.getElementById('clearInput').addEventListener('click', () => {
         document.getElementById('searchInput').value = ''
+        document.getElementsByClassName('el-input__clear')[0].style.opacity = 0
+        document.getElementById('searchInput').focus()
         displayTabs(closedTabs);
         document.getElementById('tabList').scrollTop = 0
     });

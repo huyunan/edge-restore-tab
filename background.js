@@ -68,6 +68,8 @@ function setFavIconUrl(favIconUrl, url) {
     return "icon/edge/settings.png"
   } else if (url && (url.startsWith("edge://extensions") || url.startsWith("chrome://extensions"))) {
     return "icon/edge/extensions.png"
+  } else if (url && (url.startsWith("edge://history") || url.startsWith("chrome://history"))) {
+    return "icon/edge/history.png"
   }
   return favIconUrl
 }
