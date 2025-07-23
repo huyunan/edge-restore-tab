@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function deleteItem(tab, tabElement) {
         closedTabs = closedTabs.filter(t => t.id !== tab.id);
-        await chrome.storage.sync.set({ closedTabs });
+        await chrome.storage.local.set({ closedTabs });
         tabElement.remove();
         const searchInput = document.getElementById('searchInput');
         const searchTerm = searchInput.value.toLowerCase().trim();
@@ -206,19 +206,19 @@ document.addEventListener('DOMContentLoaded', function() {
         toggleClass()
         const switchDiv = document.getElementById('switchDiv').classList
         if (switchDiv.contains('is-checked')) {
-            chrome.storage.sync.set({ switchInput: true })
+            chrome.storage.local.set({ switchInput: true })
         } else {
-            chrome.storage.sync.set({ switchInput: false })
+            chrome.storage.local.set({ switchInput: false })
         }
     });
 
-    chrome.storage.sync.get(['switchInput'], (result) => {
+    chrome.storage.local.get(['switchInput'], (result) => {
         toggleClass(!!result.switchInput)
     })
 
     document.getElementById('clearAll').addEventListener('click', () => {
         // 直接发送清空消息，不显示确认对话框
-        chrome.storage.sync.set({ closedTabs: [] }, () => {
+        chrome.storage.local.set({ closedTabs: [] }, () => {
             // 清空列表显示
             displayTabs([]);
             closedTabs = []
@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // 确保在初始化时也调用 displayTabs
-    chrome.storage.sync.get(['closedTabs'], (result) => {
+    chrome.storage.local.get(['closedTabs'], (result) => {
         closedTabs = result.closedTabs || [];
         displayTabs(closedTabs);
     });
