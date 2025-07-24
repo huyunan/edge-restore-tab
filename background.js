@@ -35,6 +35,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         favIconUrl: tab.favIconUrl
       }
     })
+    await chrome.storage.local.set({ tabIds: Array.from(tabIds) })
   }
 })
 
@@ -96,12 +97,14 @@ async function exitWindow() {
   const closedAllTabs = []
   for (let tabId of storage.tabIds) {
     const closedTab = await saveClosedTabs(tabId)
+    chrome.storage.local.remove(`tab_${tabId}`)
     if (closedTab) closedAllTabs.push(closedTab)
   }
+  await chrome.storage.local.set({ tabIds: [] })
   const result = await chrome.storage.local.get(['closedTabs'])
   if (result) {
     let closedTabs = result.closedTabs || []
-    closedTabs = closedTabs.concat(closedAllTabs)
+    closedTabs = closedAllTabs.concat(closedTabs)
     // 限制存储数量
     if (closedTabs.length > MAX_TABS) {
       closedTabs = closedTabs.slice(0, MAX_TABS)
@@ -130,6 +133,7 @@ chrome.runtime.onInstalled.addListener(async () => {
     if(session.window?.tabs) {
       session.window.tabs.forEach(tab => {
         count++
+        tab.favIconUrl = setFavIconUrl(tab.favIconUrl, tab.url)
         const closedTab = {
           id: tab.sessionId,
           url: tab.url,
@@ -137,12 +141,13 @@ chrome.runtime.onInstalled.addListener(async () => {
           favIconUrl: tab.favIconUrl,
           closedAt: Number(session.lastModified + '000')
         }
-        if (count <= maxResults && !closedTab.url.startsWith('edge://') && !closedTab.url.startsWith('chrome://')) {
+        if (count <= maxResults) {
           closeds.push(closedTab)
         }
       })
     } else {
       count++
+      session.tab.favIconUrl = setFavIconUrl(session.tab.favIconUrl, session.tab.url)
       const closedTab = {
         id: session.tab.sessionId,
         url: session.tab.url,
@@ -150,7 +155,7 @@ chrome.runtime.onInstalled.addListener(async () => {
         favIconUrl: session.tab.favIconUrl,
         closedAt: Number(session.lastModified + '000')
       }
-      if (count <= maxResults && !closedTab.url.startsWith('edge://') && !closedTab.url.startsWith('chrome://')) {
+      if (count <= maxResults) {
         closeds.push(closedTab)
       }
     }

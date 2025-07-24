@@ -223,6 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
             displayTabs([]);
             closedTabs = []
             document.getElementById('searchInput').value = '';
+            document.getElementsByClassName('el-input__clear')[0].style.opacity = 0
             page = 1;
             document.getElementById('tabList').scrollTop = 0;
         })
