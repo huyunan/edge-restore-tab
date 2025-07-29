@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 如果图标加载失败，使用默认图标
             faviconElement.onerror = () => {
+                tab.favIconUrl = "default-favicon.png"
                 faviconElement.src = chrome.runtime.getURL('default-favicon.png');
             };
 
