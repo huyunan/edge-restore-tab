@@ -197,8 +197,7 @@ function isNewTabPage(url, pendingUrl) {
 }
 
 async function getCurrentTabId() {
-  let queryOptions = { active: true, lastFocusedWindow: true }
-  let [tab] = await chrome.tabs.query(queryOptions)
+  let [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
   return tab?.id
 }
 
@@ -265,7 +264,7 @@ chrome.commands.onCommand.addListener(function(command) {
     }
 });
 
-// 修改重新打开最后标签页的函数
+// 重新打开最后标签页
 function reopenLastTab() {
   chrome.storage.local.get(['closedTabs'], async (result) => {
     const closedTabs = result?.closedTabs || []
