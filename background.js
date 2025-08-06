@@ -284,14 +284,14 @@ chrome.commands.onCommand.addListener(function(command) {
 
 // 重新打开最后标签页
 async function reopenLastTab() {
-  const result = chrome.storage.local.get(['closedTabs'])
+  const result = await chrome.storage.local.get(['closedTabs'])
   const closedTabs = result?.closedTabs || []
   if (closedTabs.length > 0) {
     const lastTab = closedTabs[0] // 获取最后关闭的标签页（数组第一个元素）
-    chrome.tabs.create({ url: lastTab.url }, function () {
+    chrome.tabs.create({ url: lastTab.url }, async function () {
       // 从存储中移除这个标签页
       closedTabs.shift()
-      chrome.storage.local.set({ closedTabs: closedTabs })
+      await chrome.storage.local.set({ closedTabs: closedTabs })
     })
   } else {
     const tabId = await getCurrentTabId()
