@@ -44,11 +44,11 @@ async function saveClosedTabs(tabKey) {
   const result = await chrome.storage.local.get(tabKey)
   const tabInfo = result[tabKey]
 
+  await chrome.storage.local.remove(tabKey)
   if (!tabInfo) {
     console.log(`未找到标签页信息: ${tabKey}`)
     return
   }
-  await chrome.storage.local.remove(tabKey)
 
   if (isNewTabPage(tabInfo.url)) {
     return
