@@ -97,7 +97,8 @@ document.addEventListener('DOMContentLoaded', function() {
             tabElement.addEventListener('click', async () => {
                 if (tab.url) {
                     const params = {
-                        url: tab.url
+                        url: tab.url,
+                        active: false,
                     }
                     const current = await chrome.tabs.query({ active: true, currentWindow: true});
                     if (current.length > 0) {
